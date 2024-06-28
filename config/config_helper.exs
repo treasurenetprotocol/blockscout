@@ -280,8 +280,8 @@ defmodule ConfigHelper do
   end
 
   @spec parse_url_env_var(String.t(), boolean()) :: String.t() | nil
-  def parse_url_env_var(env_var, trailing_slash_needed? \\ false) do
-    with url when not is_nil(url) <- safe_get_env(env_var, nil),
+  def parse_url_env_var(env_var, default_value \\ nil, trailing_slash_needed? \\ false) do
+    with url when not is_nil(url) <- safe_get_env(env_var, default_value),
          url <- String.trim_trailing(url, "/"),
          {url, true} <- {url, trailing_slash_needed?} do
       url <> "/"

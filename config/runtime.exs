@@ -1002,8 +1002,11 @@ config :ex_aws, :s3,
   scheme: "https://",
   host: System.get_env("AWS_BUCKET_HOST"),
   port: nil,
-  public_r2_url: ConfigHelper.parse_url_env_var("AWS_PUBLIC_BUCKET_URL", false),
+  public_r2_url: ConfigHelper.parse_url_env_var("AWS_PUBLIC_BUCKET_URL", nil, false),
   bucket_name: System.get_env("AWS_BUCKET_NAME")
+
+config :nft_media_handler,
+  tmp_dir: ConfigHelper.parse_url_env_var("NFT_MEDIA_TMP_DIR", "./", true)
 
 Code.require_file("#{config_env()}.exs", "config/runtime")
 

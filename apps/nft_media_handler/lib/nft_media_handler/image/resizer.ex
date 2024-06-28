@@ -9,7 +9,7 @@ defmodule NFTMediaHandler.Image.Resizer do
   alias Vix.Vips.Image, as: VipsImage
 
   def resize(image, url, extension) do
-    max_size = max(Image.width(image) |> dbg(), (Image.height(image) / Image.pages(image)) |> dbg())
+    max_size = max(Image.width(image), (Image.height(image) / Image.pages(image)))
 
     Enum.map(@sizes, fn {int_size, size} ->
       new_file_name = generate_file_name(url, extension, size)
