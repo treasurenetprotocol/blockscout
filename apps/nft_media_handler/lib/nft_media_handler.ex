@@ -133,8 +133,8 @@ defmodule NFTMediaHandler do
 
     with :ok <- File.write(path, body),
          {:ok, image} <-
-           Image.Video.with_video(path, fn video ->
-             Image.Video.image_from_video(video, frame: 0)
+           Video.with_video(path, fn video ->
+             Video.image_from_video(video, frame: 0)
            end) do
       thumbnails = Resizer.resize(image, url, ".jpg")
 
