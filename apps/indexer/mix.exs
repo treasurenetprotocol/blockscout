@@ -14,7 +14,7 @@ defmodule Indexer.MixProject do
       elixirc_paths: elixirc_paths(Mix.env()),
       lockfile: "../../mix.lock",
       start_permanent: Mix.env() == :prod,
-      version: "6.7.0",
+      version: "6.7.1",
       xref: [
         exclude: [
           Explorer.Chain.Optimism.Deposit,
@@ -66,7 +66,7 @@ defmodule Indexer.MixProject do
       {:spandex, "~> 3.0"},
       # `:spandex` integration with Datadog
       {:spandex_datadog, "~> 1.0"},
-      {:logger_json, "~> 5.1"},
+      {:logger_json, "~> 6.0"},
       {:varint, "~> 1.4"}
     ]
   end

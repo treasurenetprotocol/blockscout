@@ -23,7 +23,7 @@ defmodule BlockScoutWeb.Mixfile do
         dialyzer: :test
       ],
       start_permanent: Mix.env() == :prod,
-      version: "6.7.0",
+      version: "6.7.1",
       xref: [
         exclude: [
           Explorer.Chain.PolygonZkevm.Reader,
@@ -154,7 +154,7 @@ defmodule BlockScoutWeb.Mixfile do
       {:ueberauth, "~> 0.7"},
       {:ueberauth_auth0, "~> 2.0"},
       {:bureaucrat, "~> 0.2.9", only: :test},
-      {:logger_json, "~> 5.1"}
+      {:logger_json, "~> 6.0"}
     ]
   end
 
