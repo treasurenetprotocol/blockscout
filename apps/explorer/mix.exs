@@ -69,7 +69,7 @@ defmodule Explorer.Mixfile do
       {:comeonin, "~> 5.3"},
       {:credo, "~> 1.5", only: :test, runtime: false},
       # For Absinthe to load data in batches
-      {:dataloader, "~> 1.0.0"},
+      {:dataloader, "~> 2.0.0"},
       {:decimal, "~> 2.0"},
       {:dialyxir, "~> 1.1", only: [:dev, :test], runtime: false},
       # `override: true` for `ex_machina` compatibility
@@ -118,7 +118,7 @@ defmodule Explorer.Mixfile do
       {:cloak_ecto, "~> 1.3.0"},
       {:redix, "~> 1.1"},
       {:hammer_backend_redis, "~> 6.1"},
-      {:logger_json, "~> 5.1"},
+      {:logger_json, "~> 6.0"},
       {:typed_ecto_schema, "~> 0.4.1", runtime: false}
     ]
   end
