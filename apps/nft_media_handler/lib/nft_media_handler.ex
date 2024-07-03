@@ -21,8 +21,8 @@ defmodule NFTMediaHandler do
     end
   end
 
-  def prepare_and_upload_inner({"image", _} = media_type, body, url) do
-    with {:image, {:ok, image}} <- {:image, Image.from_binary(body, pages: -1)} do
+  def prepare_and_upload_inner({"image", _} = media_type, initial_image_binary, url) do
+    with {:image, {:ok, image}} <- {:image, Image.from_binary(initial_image_binary, pages: -1)} do
       extension = media_type_to_extension(media_type)
 
       thumbnails = Resizer.resize(image, url, ".#{extension}")
@@ -39,11 +39,14 @@ defmodule NFTMediaHandler do
         |> Enum.reject(&is_nil/1)
         |> Enum.into(%{})
 
+      # with file_name = Resizer.generate_file_name(url, ".#{extension}", "original"),
+      #      {:ok, binary} <- image_to_binary(image, file_name, ".#{extension}"),
+      #      {:ok, _result, uploaded_file_url} <-
+      #        Uploader.upload_image(binary, Resizer.generate_file_name(url, ".#{extension}", "original")) do
+
       uploaded_original_url =
-        with file_name = Resizer.generate_file_name(url, ".#{extension}", "original"),
-             {:ok, binary} <- image_to_binary(image, file_name, ".#{extension}"),
-             {:ok, _result, uploaded_file_url} <-
-               Uploader.upload_image(binary, Resizer.generate_file_name(url, ".#{extension}", "original")) do
+        with {:ok, _result, uploaded_file_url} <-
+               Uploader.upload_image(initial_image_binary, Resizer.generate_file_name(url, ".#{extension}", "original")) do
           uploaded_file_url
         else
           _ ->
@@ -62,14 +65,17 @@ defmodule NFTMediaHandler do
             url
           )
 
-      Enum.reduce(Resizer.sizes(), uploaded_thumbnails, fn {_, size}, acc ->
-        if Map.has_key?(acc, size) do
-          acc
-        else
-          Map.put(acc, size, max_size_or_original)
-        end
-      end)
-      |> Map.put("original", uploaded_original_url)
+      result =
+        Enum.reduce(Resizer.sizes(), uploaded_thumbnails, fn {_, size}, acc ->
+          if Map.has_key?(acc, size) do
+            acc
+          else
+            Map.put(acc, size, max_size_or_original)
+          end
+        end)
+        |> Map.put("original", uploaded_original_url)
+
+      {result, media_type}
     else
       {:image, {:error, reason}} ->
         Logger.warning("Error on open image from url (#{url}): #{inspect(reason)}")
@@ -90,16 +96,19 @@ defmodule NFTMediaHandler do
       remove_file(path)
       thumbnails = Resizer.resize(image, url, ".jpg")
 
-      Enum.map(thumbnails, fn {size, image, file_name} ->
-        with {:ok, _result, uploaded_file_url} <- Uploader.upload_image(image, file_name) do
-          {size, uploaded_file_url}
-        else
-          _ ->
-            nil
-        end
-      end)
-      |> Enum.reject(&is_nil/1)
-      |> Enum.into(%{})
+      result =
+        Enum.map(thumbnails, fn {size, image, file_name} ->
+          with {:ok, _result, uploaded_file_url} <- Uploader.upload_image(image, file_name) do
+            {size, uploaded_file_url}
+          else
+            _ ->
+              nil
+          end
+        end)
+        |> Enum.reject(&is_nil/1)
+        |> Enum.into(%{})
+
+      {result, media_type}
     else
       {:file, reason} ->
         Logger.error("Error while writing video to file: #{inspect(reason)}, url: #{url}")
@@ -122,7 +131,7 @@ defmodule NFTMediaHandler do
   end
 
   def image_to_binary(resized_image, _file_name, extension) when extension in [".jpg", ".png"] do
-    VipsImage.write_to_buffer(resized_image, "#{extension}[Q=75,strip]")
+    VipsImage.write_to_buffer(resized_image, "#{extension}[Q=70,strip]")
   end
 
   # workaround, because VipsImage.write_to_buffer/2 does not support .gif

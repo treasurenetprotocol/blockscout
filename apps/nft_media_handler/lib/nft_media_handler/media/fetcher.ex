@@ -55,7 +55,6 @@ defmodule NFTMediaHandler.Media.Fetcher do
         ext
         |> MIME.type()
       end
-      |> dbg()
 
     if mime_type do
       mime_type |> String.split("/") |> List.to_tuple()
