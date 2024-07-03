@@ -1008,6 +1008,11 @@ config :ex_aws, :s3,
 config :nft_media_handler,
   tmp_dir: ConfigHelper.parse_url_env_var("NFT_MEDIA_TMP_DIR", "./", true)
 
+config :nft_media_handler_interface,
+  remote?: ConfigHelper.parse_bool_env_var("NFT_MEDIA_HANDLER_REMOTE_NODE_MODE_ENABLED"),
+  # :"models@ip-192-168-1-150"
+  node: System.get_env("NFT_MEDIA_HANDLER_REMOTE_NODE")
+
 Code.require_file("#{config_env()}.exs", "config/runtime")
 
 for config <- "../apps/*/config/runtime/#{config_env()}.exs" |> Path.expand(__DIR__) |> Path.wildcard() do
