@@ -68,17 +68,8 @@ defmodule Indexer.MixProject do
       {:spandex_datadog, "~> 1.0"},
       {:logger_json, "~> 5.1"},
       {:varint, "~> 1.4"},
-      {:nft_media_handler_interface, in_umbrella: true}
+      {:nft_media_handler_dispatcher, in_umbrella: true}
     ]
-    |> optionally_nft_media_handler()
-  end
-
-  defp optionally_nft_media_handler(deps) do
-    if Application.get_env(:nft_media_handler_interface, :remote?) do
-      deps ++ [{:nft_media_handler, in_umbrella: true}]
-    else
-      deps
-    end
   end
 
   # Specifies which paths to compile per environment.

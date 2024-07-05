@@ -1,9 +1,9 @@
-defmodule NftMediaHandlerInterface.MixProject do
+defmodule NftMediaHandlerDispatcher.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :nft_media_handler_interface,
+      app: :nft_media_handler_dispatcher,
       version: "0.1.0",
       build_path: "../../_build",
       config_path: "../../config/config.exs",

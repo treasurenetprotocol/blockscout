@@ -1006,12 +1006,10 @@ config :ex_aws, :s3,
   bucket_name: System.get_env("AWS_BUCKET_NAME")
 
 config :nft_media_handler,
-  tmp_dir: ConfigHelper.parse_url_env_var("NFT_MEDIA_TMP_DIR", "./", true)
-
-config :nft_media_handler_interface,
+  tmp_dir: ConfigHelper.parse_url_env_var("NFT_MEDIA_TMP_DIR", "./", true),
   remote?: ConfigHelper.parse_bool_env_var("NFT_MEDIA_HANDLER_REMOTE_NODE_MODE_ENABLED"),
   # :"models@ip-192-168-1-150"
-  node: System.get_env("NFT_MEDIA_HANDLER_REMOTE_NODE")
+  dispatcher_node: System.get_env("NFT_MEDIA_HANDLER_REMOTE_DISPATCHER_NODE")
 
 Code.require_file("#{config_env()}.exs", "config/runtime")
 

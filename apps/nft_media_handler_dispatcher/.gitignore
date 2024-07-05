@@ -20,7 +20,7 @@ erl_crash.dump
 *.ez
 
 # Ignore package tarball (built via "mix hex.build").
-nft_media_handler_interface-*.tar
+nft_media_handler_dispatcher-*.tar
 
 # Temporary files, for example, from tests.
 /tmp/
