@@ -4,18 +4,18 @@ defmodule NftMediaHandlerInterface do
   """
 
   def put_new_url_in_que({_token_address_hash, _token_id, _media_url} = payload) do
-    remote_call(payload, Application.get_env(:nft_media_handler_interface, :remote?))
+    remote_call([payload], :add_media_to_fetch, Application.get_env(:nft_media_handler_interface, :remote?))
   end
 
   def remote_node do
     Application.get_env(:nft_media_handler_interface, :node)
   end
 
-  defp remote_call({_token_address_hash, _token_id, _media_url} = arg, true) do
-    :rpc.call(remote_node(), NFTMediaHandler.Que, :fetch, [arg])
+  defp remote_call(args, function, true) do
+    :rpc.call(remote_node(), NFTMediaHandler.Queue, function, args)
   end
 
-  defp remote_call({_token_address_hash, _token_id, _media_url} = arg, false) do
-    apply(NFTMediaHandler.Que, :fetch, [arg])
+  defp remote_call(args, function, false) do
+    apply(NFTMediaHandler.Queue, function, args)
   end
 end

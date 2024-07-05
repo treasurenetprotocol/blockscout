@@ -26,7 +26,7 @@ defmodule NFTMediaHandler.Image.Resizer do
               error -> "Error while #{size} resizing: #{inspect(error)}"
             end
 
-          Logger.warn(error_message)
+          Logger.warning(error_message)
           nil
       end
     end)
