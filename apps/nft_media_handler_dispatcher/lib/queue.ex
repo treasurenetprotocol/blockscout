@@ -5,6 +5,8 @@ defmodule NFTMediaHandlerDispatcher.Queue do
 
   use GenServer
 
+  alias Explorer.Chain.Token.Instance
+
   # todo: Move in envs (get the value via Application.get_env(...))
   @in_memory_queue_limit 2000
 
@@ -16,7 +18,12 @@ defmodule NFTMediaHandlerDispatcher.Queue do
     GenServer.call(__MODULE__, {:get_urls_to_fetch, amount})
   end
 
-  def store_result({result, media_type}) do
+  def store_result({:down, _reason}, urls) do
+    # somehow handle
+    :ok
+  end
+
+  def store_result({result, media_type}, urls) do
     :ok
   end
 
@@ -48,11 +55,24 @@ defmodule NFTMediaHandlerDispatcher.Queue do
     {:noreply, {queue, in_progress, in_memory_queue}}
   end
 
+  def handle_cast({:finished, result, url}, {queue, in_progress, in_memory_queue} = state) do
+    instances = :dets.lookup(queue, url)
+    :dets.delete(queue, url)
+    :dets.delete(in_progress, url)
+
+    Enum.map(instances, fn {_, instance_identifier} ->
+      Instance.set_media_urls(instance_identifier, result)
+    end)
+
+    {:noreply, state}
+  end
+
   def handle_call({:get_by_url, url}, _from, {queue, in_progress, in_memory_queue}) do
     {:reply, :dets.lookup(queue, url), {queue, in_progress, in_memory_queue}}
   end
 
-  # todo: - what if in_memory_queue less than amount
+  # todo:
+  # - what if in_memory_queue less than amount
   # - to fill queue after getting urls
   # - mb go inplace to dets and take all the urls from it, and then from the list take some to return, others put to in_mem_que
   def handle_call({:get_urls_to_fetch, amount}, _from, {queue, in_progress, in_memory_queue}) do
@@ -60,10 +80,6 @@ defmodule NFTMediaHandlerDispatcher.Queue do
     now = DateTime.utc_now()
     :dets.insert(in_progress, urls |> Enum.map(&{&1, now}))
     {:reply, urls, {queue, in_progress, MapSet.difference(in_memory_queue, MapSet.new(urls))}}
-  end
-
-  def handle_call({:drop_url, url}, _from, _state) do
-    :ignore
   end
 
   # todo: think about avoidance of fetching all the urls from DETS

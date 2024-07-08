@@ -32,6 +32,7 @@ defmodule Explorer.Chain.Token.Instance do
     field(:is_unique, :boolean, virtual: true)
     field(:refetch_after, :utc_datetime_usec)
     field(:retries_count, :integer)
+    field(:media_urls, :map)
 
     belongs_to(:owner, Address, foreign_key: :owner_address_hash, references: :hash, type: Hash.Address)
 
@@ -635,5 +636,8 @@ defmodule Explorer.Chain.Token.Instance do
       [set: [metadata: metadata, error: nil, updated_at: now]],
       timeout: @timeout
     )
+  end
+
+  def set_media_urls({token_address_hash, token_id}, urls) do
   end
 end
