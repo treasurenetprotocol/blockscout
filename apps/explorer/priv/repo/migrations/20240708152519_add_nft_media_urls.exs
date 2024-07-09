@@ -3,7 +3,8 @@ defmodule Explorer.Repo.Migrations.AddNftMediaUrls do
 
   def change do
     alter table(:token_instances) do
-      add(:metadata, :jsonb, null: true)
+      add(:media_urls, :jsonb, null: true)
+      add(:media_type, :string, null: true)
     end
   end
 end

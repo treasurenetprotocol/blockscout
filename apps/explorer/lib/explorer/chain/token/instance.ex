@@ -33,6 +33,7 @@ defmodule Explorer.Chain.Token.Instance do
     field(:refetch_after, :utc_datetime_usec)
     field(:retries_count, :integer)
     field(:media_urls, :map)
+    field(:media_type, :string)
 
     belongs_to(:owner, Address, foreign_key: :owner_address_hash, references: :hash, type: Hash.Address)
 
@@ -638,6 +639,14 @@ defmodule Explorer.Chain.Token.Instance do
     )
   end
 
-  def set_media_urls({token_address_hash, token_id}, urls) do
+  def set_media_urls({token_contract_address_hash, token_id}, urls, media_type) do
+    now = DateTime.utc_now()
+
+    token_id
+    |> token_instance_query(token_contract_address_hash)
+    |> Repo.update_all(
+      [set: [media_urls: urls, updated_at: now]],
+      timeout: @timeout
+    )
   end
 end

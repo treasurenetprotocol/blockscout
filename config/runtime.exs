@@ -1009,7 +1009,8 @@ config :nft_media_handler,
   tmp_dir: ConfigHelper.parse_url_env_var("NFT_MEDIA_TMP_DIR", "./", true),
   remote?: ConfigHelper.parse_bool_env_var("NFT_MEDIA_HANDLER_REMOTE_NODE_MODE_ENABLED"),
   # :"models@ip-192-168-1-150"
-  dispatcher_node: System.get_env("NFT_MEDIA_HANDLER_REMOTE_DISPATCHER_NODE")
+  dispatcher_node: System.get_env("NFT_MEDIA_HANDLER_REMOTE_DISPATCHER_NODE"),
+  in_memory_queue_limit: ConfigHelper.parse_integer_env_var("NFT_MEDIA_HANDLER_IN_MEMORY_QUEUE_SIZE", 5_000)
 
 Code.require_file("#{config_env()}.exs", "config/runtime")
 

@@ -11,6 +11,7 @@ defmodule NFTMediaHandler do
   alias NFTMediaHandler.R2.Uploader
   alias Vix.Vips.Image, as: VipsImage
 
+  @spec prepare_and_upload_by_url(binary()) :: :error | {map(), {binary(), binary()}}
   def prepare_and_upload_by_url(url) do
     with {:ok, media_type, body} <- Fetcher.fetch_media(url) do
       prepare_and_upload_inner(media_type, body, url)
@@ -124,10 +125,6 @@ defmodule NFTMediaHandler do
   defp media_type_to_extension({type, subtype}) do
     [extension | _] = MIME.extensions("#{type}/#{subtype}")
     extension
-  end
-
-  defp generate_file_name(image_name, size \\ "original") do
-    "#{image_name}_#{size}.jpg"
   end
 
   def image_to_binary(resized_image, _file_name, extension) when extension in [".jpg", ".png"] do

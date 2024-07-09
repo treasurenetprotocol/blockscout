@@ -13,6 +13,13 @@ defmodule Explorer.Prometheus.Instrumenter do
     help: "Block import stage, runner and step in runner processing time"
   ]
 
+  @histogram [
+    name: :media_processing_time,
+    buckets: :default,
+    duration_unit: :seconds,
+    help: "Time in seconds taken for media resizing and uploading"
+  ]
+
   @gauge [
     name: :weekly_success_transactions_number,
     help: "Number of successful transactions in the last 7 days",
@@ -61,6 +68,10 @@ defmodule Explorer.Prometheus.Instrumenter do
     Histogram.observe([name: :block_import_stage_runner_duration_microseconds, labels: [stage, runner, step]], time)
 
     result
+  end
+
+  def media_processing_time(seconds) do
+    Histogram.observe([name: :media_processing_time], seconds)
   end
 
   def weekly_success_transactions_number(number) do
