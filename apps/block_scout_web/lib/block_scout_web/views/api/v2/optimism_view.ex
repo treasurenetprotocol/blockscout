@@ -210,8 +210,7 @@ defmodule BlockScoutWeb.API.V2.OptimismView do
   end
 
   @doc """
-    Extends the json output with a sub-map containing information related
-    zksync: batch number and associated L1 transactions and their timestmaps.
+    Extends the json output with a sub-map containing information related Optimism.
   """
   @spec extend_transaction_json_response(map(), map()) :: map()
   def extend_transaction_json_response(out_json, %Transaction{} = transaction) do

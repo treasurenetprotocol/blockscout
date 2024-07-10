@@ -44,6 +44,10 @@ defmodule Explorer.Chain.Import.Stage.BlockReferencing do
     Runner.PolygonZkevm.BridgeOperations
   ]
 
+  @scroll_runners [
+    Runner.Scroll.L1FeeParams
+  ]
+
   @zksync_runners [
     Runner.ZkSync.LifecycleTransactions,
     Runner.ZkSync.TransactionBatches,
@@ -80,6 +84,9 @@ defmodule Explorer.Chain.Import.Stage.BlockReferencing do
       :polygon_zkevm ->
         @default_runners ++ @polygon_zkevm_runners
 
+      :scroll ->
+        @default_runners ++ @scroll_runners
+
       :shibarium ->
         @default_runners ++ @shibarium_runners
 
@@ -102,7 +109,7 @@ defmodule Explorer.Chain.Import.Stage.BlockReferencing do
     @default_runners ++
       @ethereum_runners ++
       @optimism_runners ++
-      @polygon_edge_runners ++ @polygon_zkevm_runners ++ @shibarium_runners ++ @zksync_runners ++ @arbitrum_runners
+      @polygon_edge_runners ++ @polygon_zkevm_runners ++ @scroll_runners ++ @shibarium_runners ++ @zksync_runners ++ @arbitrum_runners
   end
 
   @impl Stage

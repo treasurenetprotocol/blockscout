@@ -115,6 +115,7 @@ defmodule EthereumJSONRPC.Variant do
     case Application.get_env(:explorer, :chain_type) do
       :optimism -> "geth"
       :polygon_zkevm -> "geth"
+      :scroll -> "geth"
       :zetachain -> "geth"
       :shibarium -> "geth"
       :stability -> "geth"
