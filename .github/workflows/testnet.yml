@@ -1,0 +1,55 @@
+name: Publish to npm, Tag and GH Release
+
+on:
+  push:
+    branches:
+      - 'testnet-feature-**'
+
+env:
+  gha-role-name: "GitHubAction-AssumeRoleWithAction"
+  aws-region: "us-west-1"
+
+
+jobs:
+
+  print_timestamp:
+    uses: treasurenetprotocol/reusable-workflows/.github/workflows/reusable-timestamp.yml@main
+
+  EnvSetup:
+    needs: [ print_timestamp ]
+    name: Setup Environment
+    runs-on: self-hosted
+    outputs:
+      gha-role-name: ${{ steps.set-aws-info.outputs.gha-role-name }}
+      repo-name: ${{ steps.extract-repo-name.outputs.repo-name }}
+      aws-secret-name: ${{ steps.extract-repo-name.outputs.secret-name }}
+      aws-region: ${{ steps.set-aws-info.outputs.ecr-repo-aws-region }}
+    steps:
+      - name: Extract repo name
+        id: extract-repo-name
+        run: |
+          REPO_NAME="${{ github.repository }}"
+          SHORT_NAME=${REPO_NAME##*/}
+          echo "repo-name=$SHORT_NAME" >> $GITHUB_OUTPUT
+          echo "secret-name=testnet/$SHORT_NAME" >>$GITHUB_OUTPUT
+
+      - name: set-aws-info
+        id: set-aws-info
+        run: |
+          echo "aws-region=${{ env.ecr-repo-aws-region }}" >> $GITHUB_OUTPUT
+          echo "gha-role-name=${{ env.gha-role-name }}" >> $GITHUB_OUTPUT
+
+  deploy:
+    needs: [ EnvSetup,build-scan-publish ]
+    uses: treasurenetprotocol/reusable-workflows/.github/workflows/reusable-blockscout-deployment.yml@feat/add_job_deployment
+    with:
+      gha-role-name: ${{ needs.EnvSetup.outputs.gha-role-name }}
+      repo-name: ${{ needs.EnvSetup.outputs.repo-name }}
+      aws-region: ${{ needs.EnvSetup.outputs.aws-region }}
+      aws-secret-name: ${{ needs.EnvSetup.outputs.aws-secret-name }}
+    secrets:
+      AWS_MANAGEMENT_ACCOUNT: ${{ secrets.AWS_MANAGEMENT_ACCOUNT }}
+      AWS_TARGET_ACCOUNT: ${{ secrets.AWS_TESTNET_ACCOUNT }}
+      EC2_SSH_KEY: ${{ secrets.AWS_EC2_EEXPLORER_TESTNET_SSH_KEY }}
+      EC2_USER: ${{ secrets.AWS_EC2_EEXPLORER_TESTNET_USER }}
+      EC2_HOST: ${{ secrets.AWS_EC2_EEXPLORER_TESTNET_HOST }}
