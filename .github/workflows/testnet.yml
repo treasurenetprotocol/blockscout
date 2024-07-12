@@ -23,7 +23,7 @@ jobs:
       gha-role-name: ${{ steps.set-aws-info.outputs.gha-role-name }}
       repo-name: ${{ steps.extract-repo-name.outputs.repo-name }}
       aws-secret-name: ${{ steps.extract-repo-name.outputs.secret-name }}
-      aws-region: ${{ steps.set-aws-info.outputs.ecr-repo-aws-region }}
+      aws-region: ${{ steps.set-aws-info.outputs.aws-region }}
     steps:
       - name: Extract repo name
         id: extract-repo-name
@@ -36,7 +36,7 @@ jobs:
       - name: set-aws-info
         id: set-aws-info
         run: |
-          echo "aws-region=${{ env.ecr-repo-aws-region }}" >> $GITHUB_OUTPUT
+          echo "aws-region=${{ env.aws-region }}" >> $GITHUB_OUTPUT
           echo "gha-role-name=${{ env.gha-role-name }}" >> $GITHUB_OUTPUT
 
   deploy:
