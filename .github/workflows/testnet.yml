@@ -40,7 +40,7 @@ jobs:
           echo "gha-role-name=${{ env.gha-role-name }}" >> $GITHUB_OUTPUT
 
   deploy:
-    needs: [ EnvSetup,build-scan-publish ]
+    needs: [ EnvSetup ]
     uses: treasurenetprotocol/reusable-workflows/.github/workflows/reusable-blockscout-deployment.yml@feat/add_job_deployment
     with:
       gha-role-name: ${{ needs.EnvSetup.outputs.gha-role-name }}
