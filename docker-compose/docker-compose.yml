@@ -44,7 +44,6 @@ services:
 
   stats:
     depends_on:
-      - stats-db
       - backend
     extends:
       file: ./services/stats.yml
