@@ -56,42 +56,10 @@ server {
 }
 
 server {
-    listen       80;
-    server_name  evmexplorer.testnet.treasurenet.io;
-    proxy_http_version 1.1;
-
-    location ~ ^/(api|socket|sitemap.xml|auth/auth0|auth/auth0/callback|auth/logout) {
-        proxy_pass            ${BACK_PROXY_PASS};
-        proxy_http_version    1.1;
-        proxy_set_header      Host "$host";
-        proxy_set_header      X-Real-IP "$remote_addr";
-        proxy_set_header      X-Forwarded-For "$proxy_add_x_forwarded_for";
-        proxy_set_header      X-Forwarded-Proto "$scheme";
-        proxy_set_header      Upgrade "$http_upgrade";
-        proxy_set_header      Connection $connection_upgrade;
-        proxy_cache_bypass    $http_upgrade;
-    }
-    location / {
-        proxy_pass            ${FRONT_PROXY_PASS};
-        proxy_http_version    1.1;
-        proxy_set_header      Host "$host";
-        proxy_set_header      X-Real-IP "$remote_addr";
-        proxy_set_header      X-Forwarded-For "$proxy_add_x_forwarded_for";
-        proxy_set_header      X-Forwarded-Proto "$scheme";
-        proxy_set_header      Upgrade "$http_upgrade";
-        proxy_set_header      Connection $connection_upgrade;
-        proxy_cache_bypass    $http_upgrade;
-    }
-}
-server {
-    listen       8080;
-    server_name  evmexplorer.testnet.treasurenet.io;
-    proxy_http_version 1.1;
-    proxy_hide_header Access-Control-Allow-Origin;
-    proxy_hide_header Access-Control-Allow-Methods;
-    add_header 'Access-Control-Allow-Origin' 'http://localhost' always;
-    add_header 'Access-Control-Allow-Credentials' 'true' always;
-    add_header 'Access-Control-Allow-Methods' 'PUT, GET, POST, OPTIONS, DELETE, PATCH' always;
+    listen       8080 ssl;
+    server_name  evmexplorer.stats.testnet.treasurenet.io;
+    ssl_certificate  templates/certs/cloudflare.pem;
+    ssl_certificate_key  templates/certs/cloudflare.key;
 
     location / {
         proxy_pass            http://stats:8050/;
@@ -106,15 +74,10 @@ server {
     }
 }
 server {
-    listen       8081;
-    server_name  localhost;
-    proxy_http_version 1.1;
-    proxy_hide_header Access-Control-Allow-Origin;
-    proxy_hide_header Access-Control-Allow-Methods;
-    add_header 'Access-Control-Allow-Origin' 'http://localhost' always;
-    add_header 'Access-Control-Allow-Credentials' 'true' always;
-    add_header 'Access-Control-Allow-Methods' 'PUT, GET, POST, OPTIONS, DELETE, PATCH' always;
-    add_header 'Access-Control-Allow-Headers' 'DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization,x-csrf-token' always;
+    listen       8081 ssl;
+    server_name  evmexplorer.va.testnet.treasurenet.io;
+    ssl_certificate  templates/certs/cloudflare.pem;
+    ssl_certificate_key  templates/certs/cloudflare.key;
 
     location / {
         proxy_pass            http://visualizer:8050/;
