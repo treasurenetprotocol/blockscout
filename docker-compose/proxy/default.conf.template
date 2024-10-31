@@ -38,8 +38,8 @@ server {
 }
 
 server {
-    listen       8080 ssl;
-    server_name  evmexplorer.testnet.treasurenet.io;
+    listen       443 ssl;
+    server_name  evmexplorer.stats.testnet.treasurenet.io;
     ssl_certificate  templates/certs/cloudflare.pem;
     ssl_certificate_key  templates/certs/cloudflare.key;
 
@@ -56,8 +56,8 @@ server {
     }
 }
 server {
-    listen       8081 ssl;
-    server_name  evmexplorer.testnet.treasurenet.io;
+    listen       443 ssl;
+    server_name  evmexplorer.va.testnet.treasurenet.io;
     ssl_certificate  templates/certs/cloudflare.pem;
     ssl_certificate_key  templates/certs/cloudflare.key;
 
