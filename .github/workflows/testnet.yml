@@ -14,7 +14,12 @@ env:
   aws-region: "us-west-1"
   VALIDATOR_ROLE: "validator"
   EXPLORER_ROLE: "explorer"
-
+  
+permissions:
+  id-token: write
+  contents: write
+  pull-requests: write
+  actions: write
 
 jobs:
 
