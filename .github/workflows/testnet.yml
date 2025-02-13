@@ -9,7 +9,6 @@ env:
   gha-role-name: "GitHubAction-AssumeRoleWithAction"
   aws-region: "us-west-1"
 
-
 jobs:
 
   print_timestamp:
@@ -39,8 +38,31 @@ jobs:
           echo "aws-region=${{ env.aws-region }}" >> $GITHUB_OUTPUT
           echo "gha-role-name=${{ env.gha-role-name }}" >> $GITHUB_OUTPUT
 
-  deploy:
+  get-public-ip:
     needs: [ EnvSetup ]
+    runs-on: self-hosted
+    outputs:
+      public_ip: ${{ steps.get-public-ip.outputs.public_ip }}
+    steps:
+      - name: Assume AWS Role
+        id: assume-role
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ needs.EnvSetup.outputs.gha-role-name }}
+          aws-region: ${{ needs.EnvSetup.outputs.aws-region }}
+
+      - name: Get Public IP of blockscout instance
+        id: get-public-ip
+        run: |
+          public_ip=$(aws ec2 describe-instances \
+            --region ${{ needs.EnvSetup.outputs.aws-region }} \
+            --filters "Name=tag:Name,Values=blockscout" "Name=instance-state-name,Values=running" \
+            --query "Reservations[*].Instances[*].PublicIpAddress" \
+            --output text)
+          echo "public_ip=$public_ip" >> $GITHUB_OUTPUT
+
+  deploy:
+    needs: [ get-public-ip , EnvSetup ]
     uses: treasurenetprotocol/reusable-workflows/.github/workflows/reusable-blockscout-deployment.yml@feat/add_job_deployment
     with:
       gha-role-name: ${{ needs.EnvSetup.outputs.gha-role-name }}
@@ -51,5 +73,5 @@ jobs:
       AWS_MANAGEMENT_ACCOUNT: ${{ secrets.AWS_MANAGEMENT_ACCOUNT }}
       AWS_TARGET_ACCOUNT: ${{ secrets.AWS_TESTNET_ACCOUNT }}
       EC2_SSH_KEY: ${{ secrets.AWS_EC2_EEXPLORER_TESTNET_SSH_KEY }}
-      EC2_USER: "ubuntu"
-      EC2_HOST: "13.57.41.96"
+      EC2_USER: ${{ secrets.AWS_EC2_EEXPLORER_TESTNET_USER }}
+      EC2_HOST: ${{ needs.get-public-ip.outputs.public_ip }}
