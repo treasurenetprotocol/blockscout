@@ -14,8 +14,7 @@ env:
   aws-region: "us-west-1"
   VALIDATOR_ROLE: "validator"
   EXPLORER_ROLE: "explorer"
-  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_S3_OWNER_ACCESS_KEY_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_S3_OWNER_SECRET_ACCESS_KEY }}
+
 
 jobs:
 
