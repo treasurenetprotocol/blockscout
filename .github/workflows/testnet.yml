@@ -52,4 +52,4 @@ jobs:
       AWS_TARGET_ACCOUNT: ${{ secrets.AWS_TESTNET_ACCOUNT }}
       EC2_SSH_KEY: ${{ secrets.AWS_EC2_EEXPLORER_TESTNET_SSH_KEY }}
       EC2_USER: "ubuntu"
-      EC2_HOST: "54.176.192.24"
+      EC2_HOST: "13.57.41.96"
