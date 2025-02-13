@@ -44,13 +44,12 @@ jobs:
     outputs:
       public_ip: ${{ steps.get-public-ip.outputs.public_ip }}
     steps:
-      - name: Configure AWS credentials
+      - name: Assume AWS Role
+        id: assume-role
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          role-to-assume: arn:aws:iam::381492270411:role/full-ec2
-          aws-region: us-west-1
-          role-session-name: github-actions
-          audience: GitHub_to_AWS_via_FederatedOIDC_test
+          role-to-assume: ${{ needs.EnvSetup.outputs.gha-role-name }}
+          aws-region: ${{ needs.EnvSetup.outputs.aws-region }}
 
       - name: Get Public IP of blockscout instance
         id: get-public-ip
