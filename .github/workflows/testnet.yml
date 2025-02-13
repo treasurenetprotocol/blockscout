@@ -7,7 +7,6 @@ on:
 
 env:
   gha-role-name: "GitHubAction-AssumeRoleWithAction"
-  aws-region: "us-west-1"
   dockerfile-path: "./Dockerfile"
   composefile-path: "./docker-compose.yaml"
   NETWORK: "tn-testnet"
@@ -56,14 +55,14 @@ jobs:
     outputs:
       public_ip: ${{ steps.get-public-ip.outputs.public_ip }}
     steps:
-      # - name: Configure AWS credentials
-      #   uses: aws-actions/configure-aws-credentials@v1
-      #   with:
-      #     role-to-assume: arn:aws:iam::381492270411:role/full-ec2
-      #     aws-region: us-west-1
-      #     role-session-name: github-actions
-      #     audience: GitHub_to_AWS_via_FederatedOIDC_test
-
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::381492270411:role/full-ec2
+          aws-region: us-west-1
+          role-session-name: github-actions
+          audience: GitHub_to_AWS_via_FederatedOIDC_test
+          
       - name: Get Public IP of blockscout instance
         id: get-public-ip
         run: |
