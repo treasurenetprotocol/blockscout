@@ -12,7 +12,8 @@ env:
   composefile-path: "./docker-compose.yaml"
   NETWORK: "tn-testnet"
   ecr-repo-aws-region: "us-west-1"
-
+  VALIDATOR_ROLE: "validator"
+  EXPLORER_ROLE: "explorer"
 
 jobs:
 
