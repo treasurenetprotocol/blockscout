@@ -56,12 +56,15 @@ jobs:
       public_ip: ${{ steps.get-public-ip.outputs.public_ip }}
     steps:
       - name: Configure AWS credentials1
-        uses: aws-actions/configure-aws-credentials@v3
+        uses: aws-actions/configure-aws-credentials@v1
         with:
           role-to-assume: arn:aws:iam::381492270411:role/full-ec2
           aws-region: us-west-1
           role-session-name: github-actions
           audience: GitHub_to_AWS_via_FederatedOIDC_test
+
+      - name: aws 
+        run: aws sts get-caller-identity
           
       - name: Get Public IP of blockscout instance
         id: get-public-ip
