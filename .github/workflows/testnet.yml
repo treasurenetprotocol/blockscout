@@ -55,7 +55,7 @@ jobs:
     outputs:
       public_ip: ${{ steps.get-public-ip.outputs.public_ip }}
     steps:
-      - name: Configure AWS credentials
+      - name: Configure AWS credentials1
         uses: aws-actions/configure-aws-credentials@v1
         with:
           role-to-assume: arn:aws:iam::381492270411:role/full-ec2
