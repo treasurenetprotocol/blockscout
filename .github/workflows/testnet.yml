@@ -14,7 +14,7 @@ env:
   aws-region: "us-west-1"
   VALIDATOR_ROLE: "validator"
   EXPLORER_ROLE: "explorer"
-  
+
 permissions:
   id-token: write
   contents: write
@@ -72,7 +72,7 @@ jobs:
           aws-region: ${{ needs.EnvSetup.outputs.ecr-repo-aws-region }}
 
 
-      - name: Configure AWS credentials1
+      - name: Configure AWS credentials2
         uses: aws-actions/configure-aws-credentials@v1
         with:
           role-to-assume: arn:aws:iam::381492270411:role/full-ec2
